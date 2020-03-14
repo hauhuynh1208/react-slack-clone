@@ -23,11 +23,13 @@ class DirectMessages extends React.Component {
   addListeners = currentUserUid => {
     let loadedUsers = [];
     this.state.usersRef.on("child_added", snap => {
-      let user = snap.val();
-      user.uid = snap.key;
-      user.status = "offline";
-      loadedUsers.push(user);
-      this.setState({ users: loadedUsers });
+      if (currentUserUid !== snap.key) {
+        let user = snap.val();
+        user.uid = snap.key;
+        user.status = "offline";
+        loadedUsers.push(user);
+        this.setState({ users: loadedUsers });
+      }
     });
     this.state.connectedRef.on("value", snap => {
       if (snap.val() === true) {
